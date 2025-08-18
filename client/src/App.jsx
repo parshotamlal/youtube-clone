@@ -1,35 +1,41 @@
+import { Routes, Route } from 'react-router-dom'
+import Header from './components/Header'
+import Sidebar from './components/Sidebar'
+import { Home } from './pages/Home'
+import SearchResults from './pages/SearchResults'
+import Upload from './pages/Upload'
+import { Login } from './pages/Login'
+import Profile from './pages/Profile'
+import VideoPlayer from './pages/VideoPlayer'
+import Channel from './pages/Channel'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css"
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [open, setOpen] = useState(true);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-black text-white">
+      {/* Header with dark background */}
+      <Header onToggle={() => setOpen(o => !o)} />
+
+      <div className="flex">
+        {/* Sidebar dark */}
+        <Sidebar open={open} />
+
+        {/* Main Content Area */}
+        <main className="flex-1 p-4 bg-black text-white">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/video/:id" element={<VideoPlayer />} />
+            <Route path="/channel/:id" element={<Channel />} />
+          </Routes>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
-
-export default App
