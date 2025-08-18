@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, User, Lock, Chrome } from "lucide-react";
-
+import axios from "axios";
 function Login() {
   const [tab, setTab] = useState("login"); // login | register
   const [username, setUsername] = useState("");
@@ -25,14 +25,15 @@ function Login() {
       }
       nav("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid credentials. Please try again.");
+      setError(
+        err.response?.data?.message || "Invalid credentials. Please try again."
+      );
     }
   };
 
   return (
     <div className="flex items-center justify-center h-[100vh] bg-black font-sans">
       <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-8 space-y-6 shadow-xl">
-        
         {/* Tabs */}
         <div className="flex gap-3">
           <button
@@ -132,25 +133,25 @@ function Login() {
         </form>
 
         {/* Forgot password (extra like YouTube) */}
-        {tab === "login" && (
+        {/* {tab === "login" && (
           <div className="text-right">
             <button className="text-sm text-blue-400 hover:underline">
               Forgot password?
             </button>
           </div>
-        )}
+        )} */}
 
         {/* Divider */}
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-zinc-700"></div>
           <span className="text-zinc-500 text-sm">OR</span>
           <div className="flex-1 h-px bg-zinc-700"></div>
-        </div>
+        </div> */}
 
         {/* Social login */}
-        <button className="flex items-center justify-center gap-2 w-full py-2 rounded-lg bg-white text-black font-medium hover:bg-gray-200 transition">
+        {/* <button className="flex items-center justify-center gap-2 w-full py-2 rounded-lg bg-white text-black font-medium hover:bg-gray-200 transition">
           <Chrome className="w-5 h-5" /> Continue with Google
-        </button>
+        </button> */}
       </div>
     </div>
   );
