@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
-import { supabase } from "../Supabase/SupabaseConfig.js";
+
 // Generate JWT token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET || "your-secret-key", {
@@ -123,8 +123,14 @@ export const signin = async (req, res) => {
 // profile picture
 export const uploadimage = async (req, res) => {
   try {
-    const file = req.file;
-    const userId = req.userId;
+    const { fileurl } = req.body;
+    if (!fileurl) {
+      return res.status(400).json({
+        success: false,
+        message: "File URL is required",
+      });
+    }
+    const userId = req.user;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -132,33 +138,22 @@ export const uploadimage = async (req, res) => {
         message: "User not found",
       });
     }
-    if (!file) {
-      return res.status(400).json({
-        success: false,
-        message: "No file uploaded",
-      });
-    }
-    const filename = `${Date.now()}_${file.originalname}`;
-
-    const { data, error } = await supabase.storage
-      .from("Images")
-      .upload(filename, file.buffer, {
-        contentType: file.mimetype,
-        upsert: true,
-      });
-    const { data: publicUrl } = supabase.storage
-      .from("Images")
-      .getPublicUrl(filename);
-
-    user.profilePicture = publicUrl.publicUrl;
+    user.profilePicture = fileurl;
     await user.save();
 
-    return res.json({ url: publicUrl.publicUrl });
+    return res.status(200).json({
+      success: true,
+      message: "Profile Picture Saved",
+    });
   } catch (error) {
-    return res.status(500).json({ error: err.message });
+    console.error("Upload image error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
-
 
 // Get current user profile
 export const getProfile = async (req, res) => {

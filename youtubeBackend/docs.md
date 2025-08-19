@@ -146,6 +146,57 @@ Authenticates a user and returns a JWT token.
 
 ---
 
+#### POST /user/uploadimage
+
+Uploads and updates a user's profile picture. **Requires authentication.**
+
+**Headers:**
+```
+Authorization: Bearer <your-jwt-token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "fileurl": "https://example.com/profile-picture.jpg"
+}
+```
+
+**Response (Success - 200):**
+```json
+{
+  "success": true,
+  "message": "Profile Picture Saved"
+}
+```
+
+**Response (Error - 400):**
+```json
+{
+  "success": false,
+  "message": "File URL is required"
+}
+```
+
+**Response (Error - 401):**
+```json
+{
+  "success": false,
+  "message": "Access denied. No token provided."
+}
+```
+
+**Response (Error - 404):**
+```json
+{
+  "success": false,
+  "message": "User not found"
+}
+```
+
+---
+
 ## User Model Schema
 
 ### User Fields
@@ -224,6 +275,19 @@ After successful login, use the returned token for authenticated requests:
 ```bash
 curl -X GET http://localhost:4000/user/profile \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+### Upload Profile Picture
+
+Update user's profile picture using the JWT token:
+
+```bash
+curl -X POST http://localhost:4000/user/uploadimage \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fileurl": "https://example.com/profile-picture.jpg"
+  }'
 ```
 
 ---
