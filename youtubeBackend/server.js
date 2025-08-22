@@ -19,7 +19,8 @@ app.get("/", (req, res) => {
 //  Routes
 import authRouter from "./routes/authRoutes.js";
 app.use("/user", authRouter);
-
+import postRouter from "./routes/postRoutes.js";
+app.use("/user", postRouter);
 // Start server function
 const startServer = async () => {
   try {
