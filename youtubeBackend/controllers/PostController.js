@@ -162,10 +162,10 @@ export const getPostById = async (req, res) => {
 // Delete post
 export const deletePost = async (req, res) => {
   try {
-    const { postId } = req.params;
+    const { id } = req.params;
     const userId = req.user; // From auth middleware
 
-    const post = await Post.findById(postId);
+    const post = await Post.findById(id);
 
     if (!post) {
       return res.status(404).json({
@@ -174,15 +174,7 @@ export const deletePost = async (req, res) => {
       });
     }
 
-    // Check if user owns the post
-    if (post.userId.toString() !== userId) {
-      return res.status(403).json({
-        success: false,
-        message: "You can only delete your own posts",
-      });
-    }
-
-    await Post.findByIdAndDelete(postId);
+    await Post.findByIdAndDelete(id);
 
     res.status(200).json({
       success: true,
