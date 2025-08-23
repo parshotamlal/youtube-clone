@@ -58,34 +58,17 @@ export const AddPost = async (req, res) => {
 // Get all posts with pagination
 export const getPosts = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
     const posts = await Post.find()
       .populate("userId", "username profilePicture")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-
-    const totalPosts = await Post.countDocuments();
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
-      data: {
-        posts,
-        pagination: {
-          currentPage: page,
-          totalPages: Math.ceil(totalPosts / limit),
-          totalPosts,
-          hasNext: page * limit < totalPosts,
-          hasPrev: page > 1,
-        },
-      },
+      data: posts,
     });
   } catch (error) {
     console.error("Get posts error:", error);
-    res.status(500).json({
+    res.status(200).json({
       success: false,
       message: "Internal server error",
       error: error.message,
