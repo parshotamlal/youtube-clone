@@ -127,9 +127,9 @@ export const updatePost = async (req, res) => {
 // Get post by ID
 export const getPostById = async (req, res) => {
   try {
-    const { postId } = req.params;
+    const { id } = req.params;
 
-    const post = await Post.findById(postId).populate(
+    const post = await Post.findById(id).populate(
       "userId",
       "username profilePicture"
     );
