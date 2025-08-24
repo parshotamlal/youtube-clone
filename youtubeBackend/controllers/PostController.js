@@ -189,3 +189,145 @@ export const deletePost = async (req, res) => {
     });
   }
 };
+
+// Like/Unlike post
+export const toggleLike = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user; // From auth middleware
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    // Check if user already liked the post
+    const hasLiked = post.likes.includes(userId);
+    const hasDisliked = post.dislikes.includes(userId);
+
+    if (hasLiked) {
+      // Unlike
+      post.likeCount = Math.max(0, post.likeCount - 1);
+      post.likes = post.likes.filter((id) => id.toString() !== userId);
+    } else {
+      // Like
+      post.likeCount += 1;
+      post.likes.push(userId);
+
+      // Remove from dislikes if previously disliked
+      if (hasDisliked) {
+        post.dislikeCount = Math.max(0, post.dislikeCount - 1);
+        post.dislikes = post.dislikes.filter((id) => id.toString() !== userId);
+      }
+    }
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: hasLiked ? "Post unliked" : "Post liked",
+      data: {
+        likeCount: post.likeCount,
+        dislikeCount: post.dislikeCount,
+        isLiked: !hasLiked,
+        isDisliked: hasDisliked && !hasLiked,
+      },
+    });
+  } catch (error) {
+    console.error("Toggle like error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+
+
+// Add comment to post
+export const addComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { comment } = req.body;
+    const userId = req.user; // From auth middleware
+
+    if (!comment || comment.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Comment cannot be empty",
+      });
+    }
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    // Add comment
+    post.comments.push({
+      comment: comment.trim(),
+      userId,
+    });
+
+    await post.save();
+
+    // Populate user info for the new comment
+    await post.populate("comments.userId", "username profilePicture");
+
+    const newComment = post.comments[post.comments.length - 1];
+
+    res.status(201).json({
+      success: true,
+      message: "Comment added successfully",
+      data: {
+        comment: newComment,
+      },
+    });
+  } catch (error) {
+    console.error("Add comment error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+// Get comments for a post
+export const getComments = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id)
+      .populate("comments.userId", "username profilePicture")
+      .select("comments");
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: post.comments,
+    });
+  } catch (error) {
+    console.error("Get comments error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};

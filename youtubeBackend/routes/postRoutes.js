@@ -6,6 +6,9 @@ import {
   updatePost,
   getPostById,
   deletePost,
+  toggleLike,
+  addComment,
+  getComments,
 } from "../controllers/PostController.js";
 
 const router = Router();
@@ -15,4 +18,12 @@ router.get("/getpost", authenticateToken, getPosts);
 router.post("/updatepost/:id", authenticateToken, updatePost);
 router.get("/getpost/:id", authenticateToken, getPostById);
 router.post("/deletepost/:id", authenticateToken, deletePost);
+
+// Like/Dislike routes
+router.post("/like/:id", authenticateToken, toggleLike);
+
+// Comment routes
+router.post("/comment/:id", authenticateToken, addComment);
+router.get("/comments/:id", getComments);
+
 export default router;
