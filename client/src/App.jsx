@@ -1,41 +1,40 @@
-import { Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
-import Sidebar from './components/Sidebar'
-import { Home } from './pages/Home'
-import SearchResults from './pages/SearchResults'
-import Upload from './pages/Upload'
-import { Login } from './pages/Login'
-import Profile from './pages/Profile'
-import VideoPlayer from './pages/VideoPlayer'
-import Channel from './pages/Channel'
-import { useState } from 'react'
-import "./App.css"
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout/Layout';
+import LoadingSpinner from './components/UI/LoadingSpinner';
+import { AuthProvider } from './contexts/AuthContext';
+import { VideoProvider } from './contexts/VideoContext';
+import "./index.css"
 
-export default function App() {
-  const [open, setOpen] = useState(true);
+// Lazy load pages
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const VideoPlayerPage = React.lazy(() => import('./pages/VideoPlayerPage'));
+const ChannelPage = React.lazy(() => import('./pages/ChannelPage'));
+const AuthPage = React.lazy(() => import('./pages/AuthPage'));
+const SearchResultsPage = React.lazy(() => import('./pages/SearchResultsPage'));
 
+function App() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header with dark background */}
-      <Header onToggle={() => setOpen(o => !o)} />
-
-      <div className="flex">
-        {/* Sidebar dark */}
-        <Sidebar open={open} />
-
-        {/* Main Content Area */}
-        <main className="flex-1 p-4 bg-black text-white">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/upload" element={<Upload />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/video/:id" element={<VideoPlayer />} />
-            <Route path="/channel/:id" element={<Channel />} />
-          </Routes>
-        </main>
-      </div>
-    </div>
-  )
+    <AuthProvider>
+      <VideoProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-50">
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<HomePage />} />
+                  <Route path="/video/:videoId" element={<VideoPlayerPage />} />
+                  <Route path="/channel/:channelId" element={<ChannelPage />} />
+                  <Route path="/search" element={<SearchResultsPage />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </div>
+        </Router>
+      </VideoProvider>
+    </AuthProvider>
+  );
 }
+
+export default App;
