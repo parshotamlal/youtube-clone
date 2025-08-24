@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadVideo } from '../redux/videoSlice';
-import { useAuth } from '../hooks/useAuth';
+
 import Loader, { ButtonLoader } from '../components/Loader';
 
 const Upload = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useSelector((state) => state?.isAuthenticated);
   const { isLoading, uploadProgress, error } = useSelector((state) => state.videos);
   
   const [formData, setFormData] = useState({

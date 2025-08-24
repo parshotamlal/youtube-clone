@@ -1,28 +1,37 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import SearchBar from './SearchBar';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import SearchBar from "./SearchBar";
 import { IoMdMenu } from "react-icons/io";
 import { FaYoutube } from "react-icons/fa";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthenticated } from "../redux/isAuthenticated";
+import { logout } from "../redux/isAuthenticated";
 const Navbar = ({ onToggleSidebar }) => {
-  const { user, isAuthenticated, logoutUser } = useAuth();
+  const { user } = useAuth();
+  const { isAuthenticated } = useSelector((state) => state?.isAuthenticated);
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const token = localStorage.getItem("youtubetoken");
+    if (token) dispatch(setAuthenticated(true));
+    else dispatch(logout());
+  }, []);
   // Handlers
-  const handleLogin = () => navigate('/login');
+  const handleLogin = () => navigate("/login");
   const handleLogout = () => {
-    logoutUser();
+    localStorage.removeItem("youtubetoken");
+    dispatch(setAuthenticated(false));
     setShowUserMenu(false);
   };
-  const handleUpload = () => navigate('/upload');
+  const handleUpload = () => navigate("/upload");
 
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50 h-16">
       <div className="max-w-full mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-
           {/* Left section - Menu & Logo */}
           <div className="flex items-center space-x-4">
             {/* Sidebar toggle */}
@@ -36,7 +45,7 @@ const Navbar = ({ onToggleSidebar }) => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
-                 <FaYoutube className="text-white text-xl" /> 
+                <FaYoutube className="text-white text-xl" />
               </div>
               <span className="text-xl font-bold text-gray-900 hidden sm:block">
                 YouTube
@@ -70,9 +79,9 @@ const Navbar = ({ onToggleSidebar }) => {
                     <img
                       src={
                         user?.avatar ||
-                        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop'
+                        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop"
                       }
-                      alt={user?.name || 'User'}
+                      alt={user?.name || "User"}
                       className="w-full h-full object-cover"
                     />
                   </button>
