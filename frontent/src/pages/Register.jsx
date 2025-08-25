@@ -5,13 +5,14 @@ import { ButtonLoader } from "../components/Loader";
 
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 const Register = () => {
   const [isLoading, setLoader] = useState(false);
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState({});
-
+  const dispatch = useDispatch();
   const onSubmit = async (data) => {
     try {
       setLoader(true);
@@ -25,6 +26,7 @@ const Register = () => {
       setLoader(false);
       if (response) {
         localStorage.setItem("youtubetoken", response?.data?.data?.token);
+        dispatch(setAuthenticated(true));
         navigate("/");
       }
       if (response.error) {

@@ -12,7 +12,7 @@ const Navbar = ({ onToggleSidebar }) => {
   const { isAuthenticated } = useSelector((state) => state?.isAuthenticated);
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
-
+  console.log("isAuthenticated in Navbar:", isAuthenticated);
   const dispatch = useDispatch();
   useEffect(() => {
     const token = localStorage.getItem("youtubetoken");
