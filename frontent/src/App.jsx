@@ -39,7 +39,7 @@ function App() {
           {/* Navbar fixed at top */}
           <Navbar onToggleSidebar={toggleSidebar} />
 
-          <div className="flex flex-1 pt-14"> 
+          <div className="flex flex-1 pt-14">
             {/* Sidebar */}
             <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
 
@@ -50,7 +50,7 @@ function App() {
                 <Route path="/" element={<Feed />} />
                 <Route path="/watch/:id" element={<Watch />} />
                 <Route path="/search" element={<SearchResults />} />
-                <Route path="/channel/:id" element={<Channel />} />
+                <Route path="/channel" element={<Channel />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
