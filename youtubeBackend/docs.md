@@ -30,9 +30,8 @@ Authorization: Bearer <your-jwt-token>
 ```
 
 ## API Endpoints
-
 ### 1. Welcome Endpoint
-
+### 1. Welcome Endpoint
 #### GET /
 
 Returns a welcome message for the API.
@@ -63,7 +62,6 @@ Creates a new user account.
   "dateOfBirth": "1990-01-01"
 }
 ```
-
 **Response (Success - 201):**
 
 ```json
@@ -81,7 +79,6 @@ Creates a new user account.
       "isVerified": false,
       "createdAt": "2024-01-15T10:30:00.000Z",
       "updatedAt": "2024-01-15T10:30:00.000Z"
-    },
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
 }
@@ -99,7 +96,6 @@ Creates a new user account.
 ---
 
 #### POST /user/signin
-
 Authenticates a user and returns a JWT token.
 
 **Request Body:**
@@ -126,7 +122,6 @@ Authenticates a user and returns a JWT token.
       "dateOfBirth": "1990-01-01T00:00:00.000Z",
       "isActive": true,
       "isVerified": false,
-      "lastLogin": "2024-01-15T10:30:00.000Z",
       "createdAt": "2024-01-15T10:30:00.000Z",
       "updatedAt": "2024-01-15T10:30:00.000Z"
     },
@@ -144,7 +139,6 @@ Authenticates a user and returns a JWT token.
 }
 ```
 
----
 
 #### POST /user/uploadimage
 
@@ -162,7 +156,6 @@ Content-Type: application/json
   "fileurl": "https://example.com/profile-picture.jpg"
 }
 ```
-
 **Response (Success - 200):**
 ```json
 {
@@ -188,7 +181,6 @@ Content-Type: application/json
 ```
 
 **Response (Error - 404):**
-```json
 {
   "success": false,
   "message": "User not found"
@@ -201,7 +193,6 @@ Content-Type: application/json
 
 ### User Fields
 
-| Field            | Type    | Required | Description                | Validation                 |
 | ---------------- | ------- | -------- | -------------------------- | -------------------------- |
 | `username`       | String  | Yes      | Unique username            | 3-30 characters, unique    |
 | `email`          | String  | Yes      | User's email address       | Valid email format, unique |
