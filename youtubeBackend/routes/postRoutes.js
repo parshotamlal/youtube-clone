@@ -16,7 +16,7 @@ const router = Router();
 router.post("/addpost", authenticateToken, AddPost);
 router.get("/getpost", authenticateToken, getPosts);
 router.post("/updatepost/:id", authenticateToken, updatePost);
-router.get("/getpost/:id", authenticateToken, getPostById);
+router.get("/getpost", authenticateToken, getPostById);
 router.post("/deletepost/:id", authenticateToken, deletePost);
 
 // Like/Dislike routes

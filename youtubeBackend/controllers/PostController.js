@@ -127,13 +127,13 @@ export const updatePost = async (req, res) => {
 // Get post by ID
 export const getPostById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const user = req.user;
+    if (!user) {
+      return res.status(400).json({ message: "usernot found" });
+    }
 
-    const post = await Post.findById(id).populate(
-      "userId",
-      "username profilePicture"
-    );
-
+    const post = await Post.find({ userId: user._id });
+    console.log(post, "post");
     if (!post) {
       return res.status(404).json({
         success: false,
